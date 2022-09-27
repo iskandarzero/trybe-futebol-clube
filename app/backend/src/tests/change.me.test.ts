@@ -14,7 +14,7 @@ const { expect } = chai;
 
 describe('Seu teste', () => {
   /**
-   * Exemplo do uso de stubs com tipos
+   * Exemplo do uso de stubs com stipos
    */
 
   // let chaiHttpResponse: Response;
