@@ -1,5 +1,6 @@
 import { Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
+
 class User extends Model {
   id!: number;
   username!: string;
@@ -12,27 +13,27 @@ User.init({
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: INTEGER
+    type: INTEGER,
   },
   username: {
     allowNull: false,
-    type: STRING
+    type: STRING,
   },
   role: {
     allowNull: false,
-    type: STRING
+    type: STRING,
   },
   email: {
     allowNull: false,
-    type: STRING
+    type: STRING,
   },
   password: {
     allowNull: false,
-    type: STRING
-  }
+    type: STRING,
+  },
 }, {
   sequelize: db,
   modelName: 'user',
   timestamps: false,
-})
+});
 export default User;
