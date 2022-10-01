@@ -8,6 +8,7 @@ class User extends Model {
   email!: string;
   password!: string;
 }
+
 User.init({
   id: {
     allowNull: false,
@@ -36,4 +37,5 @@ User.init({
   modelName: 'user',
   timestamps: false,
 });
+
 export default User;
