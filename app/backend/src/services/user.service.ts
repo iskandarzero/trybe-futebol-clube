@@ -10,10 +10,10 @@ export default class UserService {
 
     const userInfo = await User.findOne({ where: { email: user.email } });
 
-    if (!userInfo) return { code: 400, message: 'generica' };
+    if (!userInfo) return { code: 401, message: 'Incorrect email or password' };
 
     const comparePasswords = await bcrypt.compare(user.password, userInfo.password);
-    if (!comparePasswords) return { code: 400, message: 'generica2' };
+    if (!comparePasswords) return { code: 400, message: 'Incorrect email or password' };
 
     const token = await generateToken(user);
     

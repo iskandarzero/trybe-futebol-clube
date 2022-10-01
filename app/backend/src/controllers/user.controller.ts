@@ -8,7 +8,7 @@ export default class UserController {
     const {email, password} = req.body;
     const user = await this._userService.login({email, password});
 
-    if (user.message) return res.status(user.code).json(user.message);
+    if (user.message) return res.status(user.code).json({ message: user.message });
     
     return res.status(user.code).json({token: user.token});
   }
@@ -16,7 +16,7 @@ export default class UserController {
   public validate = (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
 
-    if (!email || !password) return res.status(400).json({ message: "All fields must be filled" });
+    if (!email || !password) return res.status(400).json({ message: 'All fields must be filled' });
 
     next();
   }
