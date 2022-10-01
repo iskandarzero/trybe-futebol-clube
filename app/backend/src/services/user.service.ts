@@ -1,5 +1,5 @@
 import { generateToken } from '../auth/token';
-import User from '../database/models/UserModel'
+import User from '../database/models/user.model'
 import Login from '../interfaces/login.interface';
 const bcrypt = require('bcryptjs');
 
