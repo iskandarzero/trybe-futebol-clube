@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import User from '../database/models/UserModel';
+import User from '../database/models/user.model';
 const bcrypt = require('bcryptjs');
 
 import { Response } from 'superagent';
