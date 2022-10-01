@@ -1,5 +1,5 @@
 import UserService from "../services/user.service";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export default class UserController {
   constructor(private _userService = new UserService()) {}
@@ -11,5 +11,13 @@ export default class UserController {
     if (user.message) return res.status(user.code).json(user.message);
     
     return res.status(user.code).json({token: user.token});
+  }
+
+  public validate = (req: Request, res: Response, next: NextFunction) => {
+    const {email} = req.body;
+
+    if (!email) return res.status(400).json({ message: "All fields must be filled" });
+
+    next();
   }
 }
