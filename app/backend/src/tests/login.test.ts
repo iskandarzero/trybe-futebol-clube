@@ -5,6 +5,7 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import User from '../database/models/UserModel';
+const bcrypt = require('bcryptjs');
 
 import { Response } from 'superagent';
 
@@ -26,6 +27,8 @@ describe('Rota POST /login', () => {
           email: "user@user.com",
           password: "banana"
         } as User);
+
+      sinon.stub(bcrypt, "compare").resolves(true);
 
       try {
         postLogin = await chai.request(app)
