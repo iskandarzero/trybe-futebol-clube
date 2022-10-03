@@ -10,14 +10,23 @@ export default class UserController {
 
     if (user.message) return res.status(user.code).json({ message: user.message });
     
-    return res.status(user.code).json({token: user.token});
+    res.status(user.code).json({token: user.token});
   }
 
-  public validate = (req: Request, res: Response, next: NextFunction) => {
+  public validateFields = (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
 
     if (!email || !password) return res.status(400).json({ message: 'All fields must be filled' });
 
     next();
+  }
+
+  public validate = async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    
+    if (!token) return res.status(404).json({message: 'Invalid token'})
+    const userRole = await this._userService.validate(token);
+
+    res.status(userRole.code).json(userRole.message);
   }
 }
