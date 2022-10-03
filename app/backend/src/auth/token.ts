@@ -3,7 +3,7 @@ import Login from '../interfaces/login.interface';
 
 require('dotenv').config();
 
-const generateToken = async (user: Login) => {
+const generateToken = (user: Login) => {
   const jwtConfig = {
     algorithm: 'HS256',
   };
@@ -13,4 +13,11 @@ const generateToken = async (user: Login) => {
   return token;
 };
 
-export {generateToken}
+const decodeToken = (token: string) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const userId = decoded.data;
+
+  return userId;
+};
+
+export {generateToken, decodeToken}
