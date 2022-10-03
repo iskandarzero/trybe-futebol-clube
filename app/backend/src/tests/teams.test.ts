@@ -14,45 +14,78 @@ const { expect } = chai;
 const mockedTeams = [
   {
     "id": 1,
-    "team_name": "Avaí/Kindermann"
+    "teamName": "Avaí/Kindermann"
   },
   {
     "id": 2,
-    "team_name": "Bahia"
+    "teamName": "Bahia"
   },
   {
     "id": 3,
-    "team_name": "Botafogo"
+    "teamName": "Botafogo"
   },
 ];
 
 describe('Rota GET /teams', () => {
-  let getTeams: Response;
+  describe('Se a rota chamar todos os times', () => {
+    let getTeams: Response;
 
-  before(async () => {
-    sinon.stub(Teams, 'findAll').resolves(mockedTeams as Teams[]);
+    before(async () => {
+      sinon.stub(Teams, 'findAll').resolves(mockedTeams as Teams[]);
 
-    try {
-      getTeams = await chai.request(app)
-        .get('/teams').send();
-    } catch (error) {
-      console.error(error);
-    }
-  });
+      try {
+        getTeams = await chai.request(app)
+          .get('/teams').send();
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
-  after(()=>{
-    (Teams.findAll as sinon.SinonStub).restore();
+    after(()=>{
+      (Teams.findAll as sinon.SinonStub).restore();
+    })
+
+    it('Checa se a aplicação retorna um status 200', async () => {
+      const { status } = getTeams;
+
+      expect(status).to.be.equals(200);
+    })
+
+    it('Checa se a aplicação retorna todos os times', async () => {
+      const { body } = getTeams;
+
+      expect(body).to.eql(mockedTeams);
+    })
   })
 
-  it('Checa se a aplicação retorna um status 200', async () => {
-    const { status } = getTeams;
+  describe('Se a rota chamar um id específico', () => {
+    let getTeams: Response;
 
-    expect(status).to.be.equals(200);
+    before(async () => {
+      sinon.stub(Teams, 'findOne').resolves(mockedTeams[0] as Teams);
+
+      try {
+        getTeams = await chai.request(app)
+          .get('/teams/1').send();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    after(()=>{
+      (Teams.findOne as sinon.SinonStub).restore();
+    })
+
+    it('Checa se a aplicação retorna um status 200', async () => {
+      const { status } = getTeams;
+
+      expect(status).to.be.equals(200);
+    })
+
+    it('Checa se a aplicação retorna todos os times', async () => {
+      const { body } = getTeams;
+
+      expect(body).to.eql(mockedTeams[0]);
+    })
   })
-
-  it('Checa se a aplicação retorna todos os times', async () => {
-    const { body } = getTeams;
-
-    expect(body).to.eql(mockedTeams);
-  }) 
 });
