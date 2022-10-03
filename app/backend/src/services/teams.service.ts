@@ -1,0 +1,1 @@
+import Teams from '../database/models/teams.model';
