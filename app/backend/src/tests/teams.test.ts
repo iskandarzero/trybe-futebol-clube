@@ -53,6 +53,6 @@ describe('Rota GET /teams', () => {
   it('Checa se a aplicação retorna todos os times', async () => {
     const { body } = getTeams;
 
-    expect(body).to.be.equals(mockedTeams);
+    expect(body).to.eql(mockedTeams);
   }) 
 });
