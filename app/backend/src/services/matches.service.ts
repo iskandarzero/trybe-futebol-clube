@@ -10,4 +10,14 @@ export default class MatchesService {
 
     return result;
   }
+
+  public async getByProgress(status: boolean) {
+    console.log(status, typeof status);
+    const result = Matches.findAll({where: { inProgress: status }, include: [
+      { model: Teams, as: 'teamHome', attributes: { exclude: ['id'] } },
+      { model: Teams, as: 'teamAway', attributes: { exclude: ['id'] } } ]
+    });
+
+    return result;
+  }
 }
