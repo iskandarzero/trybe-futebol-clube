@@ -3,7 +3,7 @@ import Matches from '../database/models/matches.model';
 
 export default class MatchesService {
   public async getAll() {
-    const result = Matches.findAll({ include: [
+    const result = await Matches.findAll({ include: [
       { model: Teams, as: 'teamHome', attributes: { exclude: ['id'] } },
       { model: Teams, as: 'teamAway', attributes: { exclude: ['id'] } } ]
     });
@@ -12,12 +12,17 @@ export default class MatchesService {
   }
 
   public async getByProgress(status: boolean) {
-    console.log(status, typeof status);
-    const result = Matches.findAll({where: { inProgress: status }, include: [
+    const result = await Matches.findAll({where: { inProgress: status }, include: [
       { model: Teams, as: 'teamHome', attributes: { exclude: ['id'] } },
       { model: Teams, as: 'teamAway', attributes: { exclude: ['id'] } } ]
     });
 
     return result;
   }
+
+  public async createMatch(match: any) {
+    const result = await Matches.create(match);
+
+    return result;
+  } 
 }
