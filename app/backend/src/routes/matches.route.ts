@@ -7,5 +7,6 @@ const matchesController = new MatchesController();
 
 matchesRoute.get('/', matchesController.getAll);
 matchesRoute.post('/', matchesController.createMatch);
+matchesRoute.patch('/:id/finish', matchesController.finishMatch);
 
 export default matchesRoute;
