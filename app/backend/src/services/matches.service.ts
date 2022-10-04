@@ -1,5 +1,6 @@
 import Teams from '../database/models/teams.model';
 import Matches from '../database/models/matches.model';
+import IMatch from '../interfaces/match.interface';
 
 export default class MatchesService {
   public async getAll() {
@@ -20,9 +21,18 @@ export default class MatchesService {
     return result;
   }
 
-  public async createMatch(match: any) {
+  public async createMatch(match: IMatch) {
     const result = await Matches.create(match);
 
     return result;
-  } 
+  }
+
+  public async finishMatch(id: number) {
+    const result = await Matches.findOne({ where: { id }});
+
+    if (result) {
+      await result.update({ inProgress: false });
+      await result.save();
+    }
+  }
 }
