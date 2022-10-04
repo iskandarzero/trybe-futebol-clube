@@ -79,7 +79,7 @@ describe('Rota GET /matches', () => {
     let getMatches: Response;
 
     before(async () => {
-      sinon.stub(Matches, 'findOne').resolves([mockedMatches[1]] as Matches[]);
+      sinon.stub(Matches, 'findAll').resolves([mockedMatches[1]] as Matches[]);
 
       try {
         getMatches = await chai.request(app)
@@ -90,7 +90,7 @@ describe('Rota GET /matches', () => {
     });
 
     after(()=>{
-      (Matches.findOne as sinon.SinonStub).restore();
+      (Matches.findAll as sinon.SinonStub).restore();
     })
 
     it('Checa se a aplicação retorna um status 200', async () => {
