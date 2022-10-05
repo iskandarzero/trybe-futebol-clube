@@ -34,7 +34,7 @@ export default class MatchController {
     const { id } = req.params;
     const result = await this._matchService.finishMatch(Number(id));
 
-    if (result.code === 401) return res.status(401).json({ message: 'There is no team with such id!' })
+    if (result.code === 401) return res.status(401).json({ message: 'There is no match with such id!' })
 
     res.status(200).json({ message: 'Finished' })
   }
@@ -64,5 +64,15 @@ export default class MatchController {
     }
 
     next();
+  }
+
+  public updateMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = req.body;
+    const result = await this._matchService.updateMatch(Number(id), data);
+
+    if (result.code === 401) return res.status(401).json({ message: 'There is no match with such id!' });
+
+    res.status(200).json({ message: 'Updated' });
   }
 }
