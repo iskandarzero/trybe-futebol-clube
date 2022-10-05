@@ -19,8 +19,10 @@ export default class UserService {
     return {code: 200, token};
   }
 
-  public async validate(token: string) {
+  public async validateRole(token: string) {
     const userInfo = this._token.decodeToken(token);
+
+    if (!userInfo) return undefined;
 
     const userRole = await User.findOne({ where: { email: userInfo.email },
       attributes: ['role']});
