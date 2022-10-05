@@ -140,7 +140,39 @@ describe('Rota PATCH /matches/:id/finish', () => {
       const { status, body } = patchMatch;
   
       expect(status).to.be.equals(401);
-      expect(body.message).to.be.equals('There is no team with such id!');
+      expect(body.message).to.be.equals('There is no match with such id!');
+    })
+  })
+})
+
+describe('Rota PATCH /matches/:id', () => {
+  describe('Se o id existir', () => {
+    before(async () => {
+      sinon.stub(Match, 'update').resolves(undefined);
+    });
+  
+    after(()=>{
+      sinon.restore();
+    })
+  
+    it('Checa se um jogo pode ser atualizado', async () => {
+      const patchMatch = await chai.request(app).patch('/matches/44')
+      .send(createMatchMock.updatematch);
+      const { status, body } = patchMatch;
+  
+      expect(status).to.be.equals(200);
+      expect(body.message).to.be.equals('Updated');
+    })
+  })
+  
+  describe('Se o id não existir', () => {
+    it('Checa se a aplicação retorna um status 401 e uma mensagem', async () => {
+      const patchMatch = await chai.request(app).patch('/matches/404')
+      .send(createMatchMock.updatematch);;
+      const { status, body } = patchMatch;
+  
+      expect(status).to.be.equals(401);
+      expect(body.message).to.be.equals('There is no match with such id!');
     })
   })
 })

@@ -27,6 +27,10 @@ const createMatchMock = {
     awayTeamGoals: 2,
     inProgress: true
   },
+  updatematch: {
+    "homeTeamGoals": 3,
+    "awayTeamGoals": 1
+  }
 }
 
 export default createMatchMock;
