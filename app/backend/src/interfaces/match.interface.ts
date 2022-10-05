@@ -1,8 +1,8 @@
-export default interface IMatch {
-  id: number;
+export default interface Match {
+  id?: number
   homeTeam: number;
+  awayTeam: Number;
   homeTeamGoals: number;
-  awayTeam: number;
   awayTeamGoals: number;
   inProgress: boolean;
 }
