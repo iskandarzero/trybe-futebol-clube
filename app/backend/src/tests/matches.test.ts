@@ -43,6 +43,14 @@ const mockedMatches = [
   }
 ]
 
+const mockCreated = {
+  "homeTeam": 16,
+  "awayTeam": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+  "inProgress": true
+}
+
 describe('Rota GET /matches', () => {
   describe('Se a rota chamar todos os times', () => {
     let getMatches: Response;
@@ -106,3 +114,36 @@ describe('Rota GET /matches', () => {
     })
   })
 });
+
+describe('Rota POST /matches', () => {
+  describe('Se a rota recebe dados corretos', () => {
+    let postMatches: Response;
+
+    before(async () => {
+      sinon.stub(Matches, 'create').resolves({id: 255, ...mockCreated} as Matches);
+
+      try {
+        postMatches = await chai.request(app)
+          .post('/matches').set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoic2VjcmV0X3VzZXIifSwiaWF0IjoxNjY0NzgyMjcxfQ.N0jbBn8PL07-vsPjsqDHxNHKak0lqSvUjQBYXaHcvKw').send(mockCreated);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    after(()=>{
+      (Matches.create as sinon.SinonStub).restore();
+    })
+
+    it('Checa se a aplicação retorna um status 201', async () => {
+      const { status } = postMatches;
+
+      expect(status).to.be.equals(201);
+    })
+
+    it('Checa se a aplicação retorna todos as partidas em progresso', async () => {
+      const { body } = postMatches;
+
+      expect(body).to.eql({id: 255, ...mockCreated});
+    })
+  })
+})
