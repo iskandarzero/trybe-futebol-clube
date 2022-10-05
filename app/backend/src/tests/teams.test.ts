@@ -5,87 +5,47 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import Teams from '../database/models/teams.model';
+import mockTeams from '../tests/mocks/teams.mock'
 
-import { Response } from 'superagent';
 
 chai.use(chaiHttp);
-
 const { expect } = chai;
-const mockedTeams = [
-  {
-    "id": 1,
-    "teamName": "Avaí/Kindermann"
-  },
-  {
-    "id": 2,
-    "teamName": "Bahia"
-  },
-  {
-    "id": 3,
-    "teamName": "Botafogo"
-  },
-];
 
 describe('Rota GET /teams', () => {
-  describe('Se a rota chamar todos os times', () => {
-    let getTeams: Response;
-
+  describe('Se a rota pode chamar todos os itens', () => {
     before(async () => {
-      sinon.stub(Teams, 'findAll').resolves(mockedTeams as Teams[]);
-
-      try {
-        getTeams = await chai.request(app)
-          .get('/teams').send();
-      } catch (error) {
-        console.error(error);
-      }
+      sinon.stub(Teams, 'findAll').resolves(mockTeams.allTeams as Teams[]);
     });
 
     after(()=>{
-      (Teams.findAll as sinon.SinonStub).restore();
+      sinon.restore();
     })
 
-    it('Checa se a aplicação retorna um status 200', async () => {
-      const { status } = getTeams;
+    it('Checa se a aplicação retorna um status 200 com todos os times', async () => {
+      const getTeams = await chai.request(app)
+      .get('/teams').send();
+      const { status, body } = getTeams;
 
       expect(status).to.be.equals(200);
-    })
-
-    it('Checa se a aplicação retorna todos os times', async () => {
-      const { body } = getTeams;
-
-      expect(body).to.eql(mockedTeams);
+      expect(body).to.eql(mockTeams.allTeams);
     })
   })
 
-  describe('Se a rota chamar um id específico', () => {
-    let getTeams: Response;
-
+  describe('Se a rota receber um id, ela devolve um time específico', () => {
     before(async () => {
-      sinon.stub(Teams, 'findOne').resolves(mockedTeams[0] as Teams);
-
-      try {
-        getTeams = await chai.request(app)
-          .get('/teams/1').send();
-      } catch (error) {
-        console.error(error);
-      }
+      sinon.stub(Teams, 'findOne').resolves(mockTeams.team as Teams);
     });
 
     after(()=>{
-      (Teams.findOne as sinon.SinonStub).restore();
+      sinon.restore();
     })
 
-    it('Checa se a aplicação retorna um status 200', async () => {
-      const { status } = getTeams;
+    it('Checa se a aplicação retorna um status 200 com o time especificado', async () => {
+      const getTeams = await chai.request(app).get('/teams/7').send();
+      const { status, body } = getTeams;
 
       expect(status).to.be.equals(200);
-    })
-
-    it('Checa se a aplicação retorna todos os times', async () => {
-      const { body } = getTeams;
-
-      expect(body).to.eql(mockedTeams[0]);
+      expect(body).to.eql(mockTeams.team);
     })
   })
 });
