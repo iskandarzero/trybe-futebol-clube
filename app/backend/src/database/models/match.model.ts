@@ -2,7 +2,7 @@ import { Model, INTEGER, BOOLEAN } from 'sequelize';
 import db from '.';
 import Team from './team.model';
 
-class Matches extends Model {
+class Match extends Model {
   id!: number;
   homeTeam!: number;
   homeTeamGoals!: number;
@@ -13,7 +13,7 @@ class Matches extends Model {
   teamAway!: { teamName: string; };
 }
 
-Matches.init({
+Match.init({
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -47,11 +47,11 @@ Matches.init({
   }
 }, {
   sequelize: db,
-  modelName: 'matches',
+  modelName: 'match',
   timestamps: false,
 });
 
-Matches.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
-Matches.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
+Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
-export default Matches;
+export default Match;

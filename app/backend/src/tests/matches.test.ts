@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Matches from '../database/models/matches.model';
+import Match from '../database/models/match.model';
 
 import { Response } from 'superagent';
 
@@ -56,7 +56,7 @@ describe('Rota GET /matches', () => {
     let getMatches: Response;
 
     before(async () => {
-      sinon.stub(Matches, 'findAll').resolves(mockedMatches as Matches[]);
+      sinon.stub(Match, 'findAll').resolves(mockedMatches as Match[]);
 
       try {
         getMatches = await chai.request(app)
@@ -67,7 +67,7 @@ describe('Rota GET /matches', () => {
     });
 
     after(()=>{
-      (Matches.findAll as sinon.SinonStub).restore();
+      (Match.findAll as sinon.SinonStub).restore();
     })
 
     it('Checa se a aplicação retorna um status 200', async () => {
@@ -87,7 +87,7 @@ describe('Rota GET /matches', () => {
     let getMatches: Response;
 
     before(async () => {
-      sinon.stub(Matches, 'findAll').resolves([mockedMatches[1]] as Matches[]);
+      sinon.stub(Match, 'findAll').resolves([mockedMatches[1]] as Match[]);
 
       try {
         getMatches = await chai.request(app)
@@ -98,7 +98,7 @@ describe('Rota GET /matches', () => {
     });
 
     after(()=>{
-      (Matches.findAll as sinon.SinonStub).restore();
+      (Match.findAll as sinon.SinonStub).restore();
     })
 
     it('Checa se a aplicação retorna um status 200', async () => {
@@ -120,7 +120,7 @@ describe('Rota POST /matches', () => {
     let postMatches: Response;
 
     before(async () => {
-      sinon.stub(Matches, 'create').resolves({id: 255, ...mockCreated} as Matches);
+      sinon.stub(Match, 'create').resolves({id: 255, ...mockCreated} as Match);
 
       try {
         postMatches = await chai.request(app)
@@ -131,7 +131,7 @@ describe('Rota POST /matches', () => {
     });
 
     after(()=>{
-      (Matches.create as sinon.SinonStub).restore();
+      (Match.create as sinon.SinonStub).restore();
     })
 
     it('Checa se a aplicação retorna um status 201', async () => {

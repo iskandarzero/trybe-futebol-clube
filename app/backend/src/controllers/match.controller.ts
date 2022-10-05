@@ -1,12 +1,12 @@
-import MatchesService from '../services/matches.service';
+import MatchService from '../services/match.service';
 import { Request, Response, NextFunction } from 'express';
 import TeamService from '../services/team.service';
 import Token from '../auth/token';
 
-export default class MatchesController {
+export default class MatchController {
   constructor(
-    private _matchesService = new MatchesService(),
-    private _teamsService = new TeamService,
+    private _matchService = new MatchService(),
+    private _teamService = new TeamService,
     private _token = new Token()) {}
 
   public getAll = async (req: Request, res: Response) => {
@@ -15,9 +15,9 @@ export default class MatchesController {
     
     if(search) {
       const isTrueSet = (search === 'true');
-      matches = await this._matchesService.getByProgress(isTrueSet);
+      matches = await this._matchService.getByProgress(isTrueSet);
     } else {
-      matches = await this._matchesService.getAll();
+      matches = await this._matchService.getAll();
     }
 
     res.status(200).json(matches);
@@ -26,14 +26,14 @@ export default class MatchesController {
   public createMatch = async (req: Request, res: Response) => {
     const matchInfo = req.body;
     console.log(matchInfo);
-    const match = await this._matchesService.createMatch(matchInfo);
+    const match = await this._matchService.createMatch(matchInfo);
 
     res.status(201).json(match);
   }
 
   public finishMatch = async (req: Request, res: Response) => {
     const { id } = req.params;
-    await this._matchesService.finishMatch(Number(id));
+    await this._matchService.finishMatch(Number(id));
 
     res.status(200).json({ message: 'Finished' })
   }
@@ -56,8 +56,8 @@ export default class MatchesController {
         { message: 'It is not possible to create a match with two equal teams' })
     }
 
-    const teamHome = await this._teamsService.getByid(Number(homeTeam));
-    const teamAway = await this._teamsService.getByid(Number(awayTeam));
+    const teamHome = await this._teamService.getByid(Number(homeTeam));
+    const teamAway = await this._teamService.getByid(Number(awayTeam));
 
     if (!teamHome || !teamAway) {
       return res.status(404).json({ message: 'There is no team with such id!' })
