@@ -1,12 +1,12 @@
 import MatchesService from '../services/matches.service';
 import { Request, Response, NextFunction } from 'express';
-import TeamsService from '../services/teams.service';
+import TeamService from '../services/team.service';
 import Token from '../auth/token';
 
 export default class MatchesController {
   constructor(
     private _matchesService = new MatchesService(),
-    private _teamsService = new TeamsService,
+    private _teamsService = new TeamService,
     private _token = new Token()) {}
 
   public getAll = async (req: Request, res: Response) => {

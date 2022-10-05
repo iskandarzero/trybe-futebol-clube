@@ -1,4 +1,4 @@
-import Teams from '../database/models/teams.model';
+import Teams from '../database/models/team.model';
 import Matches from '../database/models/matches.model';
 import IMatch from '../interfaces/match.interface';
 
