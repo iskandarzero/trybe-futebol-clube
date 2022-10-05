@@ -1,11 +1,13 @@
 import MatchesService from '../services/matches.service';
 import { Request, Response, NextFunction } from 'express';
 import TeamsService from '../services/teams.service';
+import Token from '../auth/token';
 
 export default class MatchesController {
   constructor(
     private _matchesService = new MatchesService(),
-    private _teamsService = new TeamsService) {}
+    private _teamsService = new TeamsService,
+    private _token = new Token()) {}
 
   public getAll = async (req: Request, res: Response) => {
     const search = req.query.inProgress;
@@ -23,6 +25,7 @@ export default class MatchesController {
 
   public createMatch = async (req: Request, res: Response) => {
     const matchInfo = req.body;
+    console.log(matchInfo);
     const match = await this._matchesService.createMatch(matchInfo);
 
     res.status(201).json(match);
@@ -35,10 +38,20 @@ export default class MatchesController {
     res.status(200).json({ message: 'Finished' })
   }
 
+  public validateToken = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization;
+    const userInfo = this._token.decodeToken(token);
+    
+    if (!userInfo) return res.status(401).json({ message: "Token must be a valid token" });
+
+    next();
+  }
+
   public validateMatch = async (req: Request, res: Response, next: NextFunction) => {
     const { homeTeam, awayTeam } = req.body;
 
     if (homeTeam === awayTeam) {
+      console.log(2);
       return res.status(401).json(
         { message: 'It is not possible to create a match with two equal teams' })
     }
