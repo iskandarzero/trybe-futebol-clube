@@ -1,6 +1,7 @@
 import Team from '../database/models/team.model';
 import Match from '../database/models/match.model';
 import IMatch from '../interfaces/match.interface';
+import UpdateMatch from '../interfaces/updateMatch.interface';
 
 export default class MatchService {
   public async getAll() {
@@ -33,6 +34,17 @@ export default class MatchService {
     if (!result) return { code: 401 };
 
     await result.update({ inProgress: false });
+    await result.save();
+
+    return { code: 200 };
+  }
+
+  public async updateMatch(id: number, data: UpdateMatch) {
+    const result = await Match.findOne({ where: { id }});
+
+    if (!result) return { code: 401 };
+
+    await result.update(data);
     await result.save();
 
     return { code: 200 };
