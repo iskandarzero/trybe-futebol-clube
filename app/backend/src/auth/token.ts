@@ -21,8 +21,6 @@ export default class Token {
     
       return userId;
     } catch (err) {
-      console.log(err);
-      
       return undefined;
     }
   };

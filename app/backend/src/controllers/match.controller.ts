@@ -25,7 +25,6 @@ export default class MatchController {
 
   public createMatch = async (req: Request, res: Response) => {
     const matchInfo = req.body;
-    console.log(matchInfo);
     const match = await this._matchService.createMatch(matchInfo);
 
     res.status(201).json(match);
@@ -33,7 +32,9 @@ export default class MatchController {
 
   public finishMatch = async (req: Request, res: Response) => {
     const { id } = req.params;
-    await this._matchService.finishMatch(Number(id));
+    const result = await this._matchService.finishMatch(Number(id));
+
+    if (result.code === 401) return res.status(401).json({ message: 'There is no team with such id!' })
 
     res.status(200).json({ message: 'Finished' })
   }
@@ -42,7 +43,7 @@ export default class MatchController {
     const token = req.headers.authorization;
     const userInfo = this._token.decodeToken(token);
     
-    if (!userInfo) return res.status(401).json({ message: "Token must be a valid token" });
+    if (!userInfo) return res.status(401).json({ message: 'Token must be a valid token' });
 
     next();
   }
@@ -51,7 +52,6 @@ export default class MatchController {
     const { homeTeam, awayTeam } = req.body;
 
     if (homeTeam === awayTeam) {
-      console.log(2);
       return res.status(401).json(
         { message: 'It is not possible to create a match with two equal teams' })
     }

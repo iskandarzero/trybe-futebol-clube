@@ -30,9 +30,11 @@ export default class MatchService {
   public async finishMatch(id: number) {
     const result = await Match.findOne({ where: { id }});
 
-    if (result) {
-      await result.update({ inProgress: false });
-      await result.save();
-    }
+    if (!result) return { code: 401 };
+
+    await result.update({ inProgress: false });
+    await result.save();
+
+    return { code: 200 };
   }
 }
