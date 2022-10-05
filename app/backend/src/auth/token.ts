@@ -14,10 +14,16 @@ export default class Token {
     return token;
   };
   
-  public decodeToken = (token: string) => {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.data;
-  
-    return userId;
+  public decodeToken = (token: string | undefined) => {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.data;
+    
+      return userId;
+    } catch (err) {
+      console.log(err);
+      
+      return undefined;
+    }
   };
 }

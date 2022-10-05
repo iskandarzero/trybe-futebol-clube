@@ -20,11 +20,10 @@ export default class UserService {
   }
 
   public async validate(token: string) {
-    const { email } = this._token.decodeToken(token);
-    
-    if (!email) return {code: 404, message: 'Invalid token'}
+    const userInfo = this._token.decodeToken(token);
 
-    const userRole = await User.findOne({attributes: ['role']})
+    const userRole = await User.findOne({ where: { email: userInfo.email },
+      attributes: ['role']});
 
     return {code: 200, message: userRole};
   }

@@ -22,9 +22,7 @@ export default class UserController {
   }
 
   public validate = async (req: Request, res: Response) => {
-    const token = req.headers.authorization;
-    console.log(token);
-    
+    const token = req.headers.authorization;    
     
     if (!token) return res.status(404).json({message: 'Invalid token'})
     const userRole = await this._userService.validate(token);
