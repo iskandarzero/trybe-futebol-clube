@@ -4,9 +4,15 @@ import { Request, Response } from 'express';
 export default class LeaderboardController {
   constructor(private _leaderboardService = new LeaderboardService()) {}
 
-  public pt = async (_req: Request, res: Response) => {
-    const teste = await this._leaderboardService.leaderboard();
+  public homeLeaderboard = async (_req: Request, res: Response) => {
+    const results = await this._leaderboardService.leaderboard('home');
 
-    res.status(200).json(teste);
+    res.status(200).json(results);
+  }
+
+  public awayLeaderboard = async (_req: Request, res: Response) => {
+    const results = await this._leaderboardService.leaderboard('away');
+
+    res.status(200).json(results);
   }
 }
