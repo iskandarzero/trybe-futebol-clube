@@ -8,15 +8,21 @@ export default class LeaderboardService {
     return teams;
   }
 
-  public async allMatches(id: number) {
+  public async homeTeamMatches(id: number) {
     const matches = await Match.findAll({where: { homeTeam: id, inProgress: false } });
 
     return matches;
   }
 
-  public async matchResults(id: number, name: string) {
+  public async awayTeamMatches(id: number) {
+    const matches = await Match.findAll({where: { awayTeam: id, inProgress: false } });
+
+    return matches;
+  }
+
+  public async homeTeamResults(id: number, name: string) {
     const results = { id, name, win: 0, lose: 0, tie: 0, goals: {scored: 0, conceded: 0}};
-    const matches = await this.allMatches(id);
+    const matches = await this.homeTeamMatches(id);
 
     matches.map((p: any) => {
       results.goals.scored += p.homeTeamGoals;
@@ -32,9 +38,33 @@ export default class LeaderboardService {
     return results;
   }
 
-  public async leaderboard() {
+  public async awayTeamResults(id: number, name: string) {
+    const results = { id, name, win: 0, lose: 0, tie: 0, goals: {scored: 0, conceded: 0}};
+    const matches = await this.awayTeamMatches(id);
+
+    matches.map((p: any) => {
+      results.goals.scored += p.awayTeamGoals;
+      results.goals.conceded += p.homeTeamGoals;
+
+      if (p.awayTeamGoals > p.homeTeamGoals) {
+        return results.win += 1;
+      } else if (p.awayTeamGoals === p.homeTeamGoals) {
+        return results.tie += 1;
+      } else return results.lose += 1;
+    })
+
+    return results;
+  }
+
+  public async leaderboard(homeOrAway: string) {
     const teams = await this.allTeams();
-    const matches = await Promise.all(teams.map(async (t) => await this.matchResults(t.id, t.teamName)));
+    let matches;
+
+    if (homeOrAway === 'home') {
+      matches = await Promise.all(teams.map(async (t) => await this.homeTeamResults(t.id, t.teamName)));
+    } else {
+      matches = await Promise.all(teams.map(async (t) => await this.awayTeamResults(t.id, t.teamName)));
+    }
 
     const results = matches.map((match) => {
       const points = (match.win * 3) + (match.tie * 1);
