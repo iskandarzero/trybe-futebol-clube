@@ -1,11 +1,18 @@
 import Team from '../database/models/team.model';
 import Match from '../database/models/match.model';
+const { Op } = require('sequelize')
 
 export default class LeaderboardService {
   public async allTeams() {
     const teams = await Team.findAll();
 
     return teams;
+  }
+
+  public async allMatches(id: number) {
+    const matches = await Match.findAll({where: { [Op.or]: [{homeTeam: id}, {awayTeam: id}], inProgress: false } });
+
+    return matches;
   }
 
   public async homeTeamMatches(id: number) {
@@ -56,14 +63,45 @@ export default class LeaderboardService {
     return results;
   }
 
+  public async allResults(id: number, name: string) {
+    const results = { id, name, win: 0, lose: 0, tie: 0, goals: {scored: 0, conceded: 0}};
+    const matches = await this.allMatches(id);
+
+    matches.map((p: any) => {
+      if (id === p.homeTeam) {
+        results.goals.scored += p.homeTeamGoals;
+        results.goals.conceded += p.awayTeamGoals;
+
+        if (p.homeTeamGoals > p.awayTeamGoals) {
+          return results.win += 1;
+        } else if (p.homeTeamGoals === p.awayTeamGoals) {
+          return results.tie += 1;
+        } else return results.lose += 1;
+      } else {
+        results.goals.scored += p.awayTeamGoals;
+        results.goals.conceded += p.homeTeamGoals;
+
+        if (p.awayTeamGoals > p.homeTeamGoals) {
+          return results.win += 1;
+        } else if (p.awayTeamGoals === p.homeTeamGoals) {
+          return results.tie += 1;
+        } else return results.lose += 1;
+      }
+    })
+
+    return results;
+  }
+
   public async leaderboard(homeOrAway: string) {
     const teams = await this.allTeams();
     let matches;
 
     if (homeOrAway === 'home') {
       matches = await Promise.all(teams.map(async (t) => await this.homeTeamResults(t.id, t.teamName)));
-    } else {
+    } else if (homeOrAway === 'away') {
       matches = await Promise.all(teams.map(async (t) => await this.awayTeamResults(t.id, t.teamName)));
+    } else {
+      matches = await Promise.all(teams.map(async (t) => await this.allResults(t.id, t.teamName)));
     }
 
     const results = matches.map((match) => {
