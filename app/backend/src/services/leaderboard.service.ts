@@ -9,22 +9,31 @@ export default class LeaderboardService {
     return teams;
   }
 
-  public async allMatches(id: number) {
-    const matches = await Match.findAll({where: { [Op.or]: [{homeTeam: id}, {awayTeam: id}], inProgress: false } });
+  public async allMatches() {
+    const matches = await Match.findAll({where: { inProgress: false } });
 
     return matches;
+  }
+
+  public async allTeamMatches(id: number) {
+    const matches = await this.allMatches();
+    const allMatches = matches.filter((match) => match.homeTeam === id || match.awayTeam === id);
+
+    return allMatches;
   }
 
   public async homeTeamMatches(id: number) {
-    const matches = await Match.findAll({where: { homeTeam: id, inProgress: false } });
+    const matches = await this.allMatches();
+    const homeMatches = matches.filter((match) => match.homeTeam === id)
 
-    return matches;
+    return homeMatches;
   }
 
   public async awayTeamMatches(id: number) {
-    const matches = await Match.findAll({where: { awayTeam: id, inProgress: false } });
+    const matches = await this.allMatches();
+    const awayMatches = matches.filter((match) => match.awayTeam === id)
 
-    return matches;
+    return awayMatches;
   }
 
   public async homeTeamResults(id: number, name: string) {
@@ -65,7 +74,7 @@ export default class LeaderboardService {
 
   public async allResults(id: number, name: string) {
     const results = { id, name, win: 0, lose: 0, tie: 0, goals: {scored: 0, conceded: 0}};
-    const matches = await this.allMatches(id);
+    const matches = await this.allTeamMatches(id);
 
     matches.map((p: any) => {
       if (id === p.homeTeam) {
