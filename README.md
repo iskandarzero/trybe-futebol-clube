@@ -6,6 +6,33 @@ Nesse projeto desenvolvi o backend de uma aplicação que trazia informações s
 
 ## Rotas
 
+### /login
+
+```
+  http://localhost:3000/login
+```
+
+<details>
+
+  A rota login é do tipo POST e deve receber um corpo com o seguinte formato:
+  
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
+  
+  A rota utiliza a bliblioteca `bcryptjs` para autenticar a senha com o banco de dados, e em caso de sucesso, retorna um token da biblioteca `jsonwebtoken` para permitir o acesso do ususário.
+
+</details>
+
+### /login/validate
+
+```
+  http://localhost:3001/login/validate
+```
+
 <!-- Olá, Tryber!
 
 Esse é apenas um arquivo inicial para o README do seu projeto.
