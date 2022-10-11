@@ -33,17 +33,42 @@ Nesse projeto desenvolvi o backend de uma aplicação que trazia informações s
   http://localhost:3001/login/validate
 ```
 
-<!-- Olá, Tryber!
+<details>
 
-Esse é apenas um arquivo inicial para o README do seu projeto.
+  A rota GET é consumida pelo frontend para checar as permissões que o usuário tem baseadas em sua função. Ela deverá enviar uma resposta nesse formato:
+  
+  ```json
+  { "role": "admin" }
+  ```
+  
+</details>
 
-É essencial que você preencha esse documento por conta própria, ok?
+### /teams
 
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
+```
+  http://localhost:3001/teams
+```
 
-⚠️ IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
+<details>
 
--->
+  A rota GET retorna os nomes e ids e todos os times no seguinte formato:
+  
+  ```json
+  [
+  {
+    "id": 1,
+    "teamName": "Avaí/Kindermann"
+  },
+  {
+    "id": 2,
+    "teamName": "Bahia"
+  },
+  {
+    "id": 3,
+    "teamName": "Botafogo"
+  },
+  ...
+]
+  ```
+  
+</details>
