@@ -2,7 +2,7 @@
 
 ## Contexto
 
-Nesse projeto desenvolvi o backend de uma aplicação que trazia informações sobre futebol. A aplicação conta com um login que checa com o banco de dados se a conta se trata de um admnistrador com permissões ou de um usuário comum, e nas suas rotas, é capaz de trazer informações de partidas finalizadas e em andamento, além de placares relacionados aos jogos.
+Nesse projeto desenvolvi o backend de uma aplicação que trazia informações sobre futebol. A aplicação conta com um login que checa com o banco de dados se a conta se trata de um admnistrador com permissões ou de um usuário comum, e nas suas rotas é capaz de trazer informações de partidas finalizadas e em andamento, além de placares relacionados aos jogos.
 
 ## Tecnologias e ferramentas
 
